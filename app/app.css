@@ -1,0 +1,58 @@
+/* app css stylesheet */
+
+.menu {
+  list-style: none;
+  border-bottom: 0.1em solid black;
+  margin-bottom: 2em;
+  padding: 0 0 0.5em;
+}
+
+.menu:before {
+  content: "[";
+}
+
+.menu:after {
+  content: "]";
+}
+
+.menu > li {
+  display: inline;
+}
+
+.menu > li + li:before {
+  content: "|";
+  padding-right: 0.3em;
+}
+
+
+.d-flex {
+  display: flex;
+}
+.flex-wrap {
+  flex-wrap: wrap;
+}
+.flex-1 {
+  flex: 1;
+}
+.page {
+  padding: 50px;
+}
+.left-panel, .right-panel {
+  padding: 20px;
+}
+.left-panel {
+  border-right: 1px solid;
+}
+
+.pdf-table {
+  width: 100%;
+  margin-top: 50px;
+}
+
+.pdf-table th {
+  text-align: left;
+  border-bottom: 1px solid;
+}
+table, th, td {
+  border: 1px solid black;
+}
