@@ -1,10 +1,10 @@
 <div class="page">
-  <div class="d-flex">
-    <div class="flex-1 left-panel">
+  <div class="">
+    <div class="left-panel">
       <h1>PDF Files</h1>
       <div>
-        <input type="file" onchange="angular.element(this).scope().changeFile(this)" accept=".pdf"/>
-        <button ng-click="uploadFile()">Upload PDF</button>
+        <!-- <input type="file" onchange="angular.element(this).scope().changeFile(this)" accept=".pdf"/> -->
+        <a href="#!/create-flip-book">Create Flip Book</a>
       </div>
       <div>
         <table class="pdf-table">
@@ -12,6 +12,7 @@
             <th>Name</th>
             <th>Size</th>
             <th>Date</th>
+            <th>Status</th>
             <th>Action</th>
           </thead>
           <tbody>
@@ -19,26 +20,14 @@
               <td>{{file.name}}</td>
               <td>{{file.size}}</td>
               <td>{{file.created}}</td>
+              <td>{{file.published ? 'Published': 'Draft'}}</td>
               <td>
                 <button ng-click="deletePdf(file)">Delete</button>
+                <a href="{{'#!/edit-flip-book/' + file._id}}">Edit</a>
               </td>
             </tr>
           </tbody>
         </table>
-      </div>
-    </div>
-    <div class="flex-1 right-panel">
-      <h1>Audio File</h1>
-      <div>
-        <input type="file" onchange="angular.element(this).scope().changeAudioFile(this)" accept="audio/*"/>
-        <button ng-click="uploadAudioFile()">Upload Audio</button>
-      </div>
-      <div>
-        <p>{{audio.name}}</p>
-        <audio controls>
-          <source src="http://localhost:3000/audio/flip.mp3">
-          Your browser does not support the audio tag.
-        </audio>
       </div>
     </div>
   </div>
@@ -52,7 +41,7 @@
       <div ng-repeat="video in videos" style="margin-right: 20px;">
         <p style="margin-bottom: 0px;">{{video.name}}</p>
         <video width="320" height="240" controls>
-          <source src="{{'http://localhost:3000/videos/' + video.url}}">
+          <source src="{{'http://localhost:3002/videos/' + video.url}}">
           Your browser does not support the video tag.
         </video>
         <div>

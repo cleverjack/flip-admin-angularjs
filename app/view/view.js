@@ -136,7 +136,7 @@ angular.module('myApp.view', ['ngRoute'])
 
     var req = {
       method: 'POST',
-      url: 'http://localhost:3000/upload-video',
+      url: 'http://localhost:3002/upload-video',
       headers: {
         'Content-Type': undefined
       },
@@ -153,7 +153,7 @@ angular.module('myApp.view', ['ngRoute'])
   $scope.deletePdf = function (file) {
     var req = {
       method: 'DELETE',
-      url: 'http://localhost:3000/delete-pdf/' + file._id
+      url: 'http://localhost:3002/delete-pdf/' + file._id,
     }
 
     $http(req).then(function (res) {
@@ -167,7 +167,7 @@ angular.module('myApp.view', ['ngRoute'])
   $scope.deleteVideo = function (video) {
     var req = {
       method: 'DELETE',
-      url: 'http://localhost:3000/delete-video/' + video._id
+      url: 'http://localhost:3002/delete-video/' + video._id
     }
 
     $http(req).then(function (res) {
@@ -176,5 +176,8 @@ angular.module('myApp.view', ['ngRoute'])
     }, function () {
 
     })
+  }
+
+  $scope.createFlipBook = function () {
   }
 }]);

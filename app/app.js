@@ -4,6 +4,7 @@
 angular.module('myApp', [
   'ngRoute',
   'myApp.view',
+  'myApp.pdfProcess',
   'myApp.version'
 ]).
 config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
