@@ -20,7 +20,7 @@ angular.module('myApp.pdfProcess', ['ngRoute'])
   $scope.audioFile = null;
   $scope.videoFile = null;
   $scope.totalPageNum = 0;
-  $scope.currentPageNum = 0;
+  $scope.currentPageNum = 1;
   $scope.flipBook = null;
   $scope.pdfData = null;
   $scope.bgAudioFile = null;
@@ -36,6 +36,8 @@ angular.module('myApp.pdfProcess', ['ngRoute'])
   $scope.pageAudioObj = new Audio();
   $scope.bgAudioObj = new Audio();
 
+  $scope.loading = false;
+
   $scope.init = function () {
     if ($scope.pdfId) {
       let req = {
@@ -45,7 +47,7 @@ angular.module('myApp.pdfProcess', ['ngRoute'])
   
       $http(req).then(function (res) {
         $scope.pdfData = res.data;
-        $scope.renderFlipPage('http://localhost:3002/' + $scope.pdfData.url);
+        $scope.renderFlipPage($scope.pdfData);
       }, function () {
   
       })
@@ -88,6 +90,9 @@ angular.module('myApp.pdfProcess', ['ngRoute'])
     }
 
     formdata.append('file', $scope.file);
+    if ($scope.pdfData) {
+      formdata.append('_id', $scope.pdfData._id);
+    }
 
     var req = {
       method: 'POST',
@@ -100,7 +105,7 @@ angular.module('myApp.pdfProcess', ['ngRoute'])
      
      $http(req).then(function(res){
       $scope.pdfData = res.data;
-      $scope.renderFlipPage('http://localhost:3002/' + $scope.pdfData.url);
+      $scope.renderFlipPage($scope.pdfData);
      }, function(){
        
      });
@@ -232,54 +237,6 @@ angular.module('myApp.pdfProcess', ['ngRoute'])
     }
   }
 
-  $scope.getPdfImages = (url) => {
-    let promiseAll = [];
-
-    return new Promise((resolve, reject) => {
-        pdfjsLib.getDocument(url).promise.then(loadedPdf => {
-            if (loadedPdf && loadedPdf.numPages) {
-                for (let i = 0; i < loadedPdf.numPages; i++) {
-                    promiseAll.push(loadedPdf.getPage(i + 1));
-                }
-
-                Promise.all(promiseAll).then(pages => {
-                    let canvases = [];
-
-                    for (let j = 0; j < pages.length; j++) {
-                        let page = pages[j];
-
-                        const viewport = page.getViewport({ scale: 1.5 });
-                        const canvas = document.createElement('canvas');
-                        canvas.height = viewport.height;
-                        canvas.width = viewport.width;
-                        const renderContext = {
-                            canvasContext: canvas.getContext('2d'),
-                            viewport: viewport
-                        };
-                        const div = document.createElement('div');
-                        div.className = "page";
-                        div.appendChild(canvas);
-
-                        const shadow = document.createElement('div');
-                        shadow.className = "shadow";
-                        div.appendChild(shadow);
-
-                        canvases.push(div);
-
-                        page.render(renderContext);
-                    }
-                    resolve({canvases, totalPageNum: loadedPdf.numPages});
-                }, function (reason) {
-                    reject(reason);
-                })
-            }
-        }, function (reason) {
-            console.error(reason);
-            reject(reason);
-        });
-    })
-  }
-
   $scope.$watch('isPageMute', function () {
     console.log($scope.isPageMute);
     if ($scope.isPageMute) {
@@ -305,46 +262,48 @@ angular.module('myApp.pdfProcess', ['ngRoute'])
     }
   });
 
-  $scope.renderFlipPage = (url) => {
-    $scope.getPdfImages(url).then(data => {
-      $scope.totalPageNum = data.totalPageNum;
-      $scope.$apply();
-      // if ($scope.flipBook) {
-      //   $scope.flipBook.destroy();
-          
-        const flipPageRoot = document.createElement('div');
-        flipPageRoot.id = "flip-book";
+  $scope.renderFlipPage = (pdfObject) => {
+    // if ($scope.flipBook) {
+    //   $scope.flipBook.destroy();
+    $scope.totalPageNum = pdfObject.totalPageNum;
 
-        let flipPageWrapperElement = document.getElementById("flip-book-wrapper");
-        flipPageWrapperElement.prepend(flipPageRoot);
-      // }
-      $scope.flipBook = new St.PageFlip(document.getElementById('flip-book'),
-          {
-              width: 300, // required parameter - base page width
-              height: 500,  // required parameter - base page height
-              showCover: true
-          }
-      );
+      const flipPageRoot = document.createElement('div');
+      flipPageRoot.id = "flip-book";
 
-      if (data.canvases && data.canvases.length) {
-        $scope.flipBook.loadFromHTML(data.canvases);
-        $scope.flipBook.on('flip', (e) => {
-            $scope.currentPageNum = e.data;
-            $scope.$apply();
-            console.log($scope.currentPageNum);
+      let flipPageWrapperElement = document.getElementById("flip-book-wrapper");
+      flipPageWrapperElement.prepend(flipPageRoot);
+    // }
+    $scope.flipBook = new St.PageFlip(document.getElementById('flip-book'),
+        {
+            width: 300, // required parameter - base page width
+            height: 500,  // required parameter - base page height
+            showCover: true
+        }
+    );
 
-            let pageAudio = $scope.pageAudios.find(it => it.pageNum == e.data);
-            if ($scope.pageAudioObj.readyState != 0)
-            $scope.pageAudioObj.pause();
-
-            if (pageAudio) {
-              $scope.pageAudioObj.src="http://localhost:3002/audio/" + pageAudio.url;
-              if (!$scope.isPageMute)
-                $scope.pageAudioObj.play();
-            }
-            // audioObj.play();
-        });
+      let imageUrls = [];
+      for (let i=0; i<$scope.totalPageNum; i++) {
+        let url = 'http://localhost:3002/pages/' + pdfObject.baseName + '-' + i + '.png';
+        imageUrls.push(url);
       }
-    });
+
+      console.log(imageUrls);
+      $scope.flipBook.loadFromImages(imageUrls);
+      $scope.flipBook.on('flip', (e) => {
+          $scope.currentPageNum = e.data + 1;
+          $scope.$apply();
+          console.log($scope.currentPageNum);
+
+          let pageAudio = $scope.pageAudios.find(it => it.pageNum == $scope.currentPageNum);
+          if ($scope.pageAudioObj.readyState != 0)
+          $scope.pageAudioObj.pause();
+
+          if (pageAudio) {
+            $scope.pageAudioObj.src="http://localhost:3002/audio/" + pageAudio.url;
+            if (!$scope.isPageMute)
+              $scope.pageAudioObj.play();
+          }
+          // audioObj.play();
+      });
   }
 }]);

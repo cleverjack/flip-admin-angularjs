@@ -19,6 +19,9 @@ angular.module('myApp.view', ['ngRoute'])
   $scope.audio = null;
   $scope.videos = [];
 
+  $scope.showVideoList = false;
+  $scope.showBookList = false;
+
   $scope.init = function () {
     let req = {
       method: 'GET',

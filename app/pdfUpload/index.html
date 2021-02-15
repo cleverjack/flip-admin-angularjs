@@ -10,8 +10,7 @@
         <button ng-click="uploadFile()">Upload PDF</button>
       </div>
       <div>
-        <div id="flip-book-wrapper" style="margin-top: 50px;">
-       
+        <div id="flip-book-wrapper" style="margin-top: 50px; width: 300px; height: 500px; overflow: hidden; margin-left: auto; margin-right: auto;">
         </div>
         <div style="text-align: center; margin-top: 20px;">
           <button ng-click="prevPage()">Prev</button>
@@ -19,8 +18,14 @@
           <button ng-click="nextPage()">Next</button>
         </div>
         <div style="text-align: center; margin-top: 20px;">
-          <button ng-click="isBgMute = !isBgMute">{{isBgMute ? 'Unmute Background' : 'Mute Background'}}</button>
-          <button ng-click="isPageMute = !isPageMute">{{isPageMute ? 'Unmute Page' : 'Mute Page'}}</button>
+          <button ng-click="isBgMute = !isBgMute" style="width: 100px;">
+            <span ng-if="isBgMute">Unmute<br/>Background</span>
+            <span ng-if="!isBgMute">Mute<br/>Background</span>
+          </button>
+          <button ng-click="isPageMute = !isPageMute" style="width: 100px;">
+            <span ng-if="isPageMute">Unmute<br/>Page</span>
+            <span ng-if="!isPageMute">Mute<br/>Page</span>
+          </button>
         </div>
       </div>
     </div>
@@ -39,10 +44,10 @@
             Your browser does not support the audio tag.
           </audio>
         </div>
-        <button ng-click="deleteAudio(bgAudio)">Remove Background Audio</button>
+        <button ng-click="deleteAudio(bgAudio)" style="margin-top: 10px;">Remove Background Audio</button>
         <div>
           <h2>Page Audio</h2>
-          <div>
+          <div style="margin-bottom: 10px;">
             <label>Page Number</label>
             <input ng-model="currentPageNum" style="width: 100px;"/>
           </div>
