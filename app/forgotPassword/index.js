@@ -10,11 +10,7 @@ angular.module('myApp.forgotPassword', ['ngRoute'])
 }])
 
 .controller('ForgotPasswordCtrl', ['$scope', '$http', function($scope, $http) {
-  $scope.name = null;
-  $scope.confirm_password = null;
-  $scope.email = null;
-  $scope.password = null;
-  $scope.phone = null;
+  $scope.email = 'lazstar1127@gmail.com';
 
   $scope.init = function () {
     
@@ -22,47 +18,17 @@ angular.module('myApp.forgotPassword', ['ngRoute'])
 
   $scope.init();
 
-  $scope.resetPassword = function () {
-    // if (!$scope.email) {
-    //   alert('Email is requied');
-    //   return ;
-    // }
-
-    // if (!$scope.name) {
-    //   alert('Name is requied');
-    //   return ;
-    // }
-
-    // if (!$scope.phone) {
-    //   alert('Phone is requied');
-    //   return ;
-    // }
-
-    if (!$scope.password) {
-      alert('Password is requied');
-      return ;
-    }
-
-    if (!$scope.confirm_password) {
-      alert('Confirm Password is required');
-      return ;
-    }
-    
-    if ($scope.password != $scope.confirm_password) {
-      alert('Password Confirm is mismatch');
-      return ;
-    }
-
+  $scope.forgotPassword = function () {
     let req = {
       method: 'POST',
-      url: 'http://localhost:3002/auth/reset-password',
+      url: 'http://localhost:3002/auth/forgot-password',
       data: {
-        password: $scope.password,
+        role: 2
       }
     };
 
     $http(req).then(function (res) {
-      window.location.href = "#!/login";
+      alert('Email Sent. Please check your email.')
     }, function () {
       alert('Reset Password failed');
     })

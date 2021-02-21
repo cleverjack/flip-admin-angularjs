@@ -5,6 +5,7 @@ angular.module('myApp', [
   'ngRoute',
   'myApp.login',
   'myApp.forgotPassword',
+  'myApp.resetPassword',
   'myApp.view',
   'myApp.pdfProcess',
   'myApp.version'
