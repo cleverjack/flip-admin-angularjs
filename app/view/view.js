@@ -23,9 +23,19 @@ angular.module('myApp.view', ['ngRoute'])
   $scope.showBookList = false;
 
   $scope.init = function () {
+    let token = localStorage.getItem('token');
+    if (!token || token == "") {
+      window.location.href = '#!/login';
+      return;
+    }
+
     let req = {
       method: 'GET',
-      url: 'http://localhost:3002'
+      url: 'http://localhost:3002',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      }
     };
 
     $http(req).then(function (res) {
@@ -36,7 +46,11 @@ angular.module('myApp.view', ['ngRoute'])
 
     let req2 = {
       method: 'GET',
-      url: 'http://localhost:3002/get-audio'
+      url: 'http://localhost:3002/get-audio',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      }
     };
 
     $http(req2).then(function (res) {
@@ -47,7 +61,11 @@ angular.module('myApp.view', ['ngRoute'])
     
     let req3 = {
       method: 'GET',
-      url: 'http://localhost:3002/videos'
+      url: 'http://localhost:3002/videos',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      }
     };
 
     $http(req3).then(function (res) {
@@ -87,7 +105,8 @@ angular.module('myApp.view', ['ngRoute'])
       method: 'POST',
       url: 'http://localhost:3002/upload',
       headers: {
-        'Content-Type': undefined
+        'Content-Type': undefined,
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
       },
       data: formdata
      }
@@ -114,7 +133,8 @@ angular.module('myApp.view', ['ngRoute'])
       method: 'POST',
       url: 'http://localhost:3002/upload-audio',
       headers: {
-        'Content-Type': undefined
+        'Content-Type': undefined,
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
       },
       data: formdata
      }
@@ -141,7 +161,8 @@ angular.module('myApp.view', ['ngRoute'])
       method: 'POST',
       url: 'http://localhost:3002/upload-video',
       headers: {
-        'Content-Type': undefined
+        'Content-Type': undefined,
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
       },
       data: formdata
      }
@@ -157,6 +178,9 @@ angular.module('myApp.view', ['ngRoute'])
     var req = {
       method: 'DELETE',
       url: 'http://localhost:3002/delete-pdf/' + file._id,
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      },
     }
 
     $http(req).then(function (res) {
@@ -170,7 +194,10 @@ angular.module('myApp.view', ['ngRoute'])
   $scope.deleteVideo = function (video) {
     var req = {
       method: 'DELETE',
-      url: 'http://localhost:3002/delete-video/' + video._id
+      url: 'http://localhost:3002/delete-video/' + video._id,
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      },
     }
 
     $http(req).then(function (res) {
@@ -182,5 +209,10 @@ angular.module('myApp.view', ['ngRoute'])
   }
 
   $scope.createFlipBook = function () {
+  }
+
+  $scope.logout = function () {
+    localStorage.removeItem('token');
+    window.location.href="#!/login";
   }
 }]);

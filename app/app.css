@@ -89,3 +89,12 @@ table, th, td {
   padding: 20px;
   box-sizing: border-box;
 }
+
+.form-label {
+  width: 150px;
+  display: block;
+}
+
+.form-control {
+  width: 300px;
+}

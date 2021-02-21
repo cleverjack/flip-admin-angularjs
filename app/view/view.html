@@ -1,5 +1,8 @@
 <div class="page">
   <div class="">
+    <div style="text-align: right;">
+      <button ng-click="logout()">Logout</button>
+    </div>
     <button ng-click="showBookList = !showBookList">{{showBookList ? 'Hide Book List' : 'Show Book List'}}</button>
     <div class="left-panel" ng-if="showBookList">
       <h1>PDF Files</h1>

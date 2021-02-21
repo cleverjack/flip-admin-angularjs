@@ -20,7 +20,7 @@ angular.module('myApp.pdfProcess', ['ngRoute'])
   $scope.audioFile = null;
   $scope.videoFile = null;
   $scope.totalPageNum = 0;
-  $scope.currentPageNum = 1;
+  $scope.currentPageNum = 0;
   $scope.flipBook = null;
   $scope.pdfData = null;
   $scope.bgAudioFile = null;
@@ -39,10 +39,20 @@ angular.module('myApp.pdfProcess', ['ngRoute'])
   $scope.loading = false;
 
   $scope.init = function () {
+    let token = localStorage.getItem('token');
+    if (!token || token == "") {
+      window.location.href = '#!/login';
+      return;
+    }
+
     if ($scope.pdfId) {
       let req = {
         method: 'GET',
-        url: 'http://localhost:3002/pdf/' + $scope.pdfId
+        url: 'http://localhost:3002/pdf/' + $scope.pdfId,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem('token')
+        }
       };
   
       $http(req).then(function (res) {
@@ -54,7 +64,11 @@ angular.module('myApp.pdfProcess', ['ngRoute'])
   
       let req2 = {
         method: 'GET',
-        url: 'http://localhost:3002/pdf-audios/' + $scope.pdfId
+        url: 'http://localhost:3002/pdf-audios/' + $scope.pdfId,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem('token')
+        }
       };
   
       $http(req2).then(function (res) {
@@ -98,7 +112,8 @@ angular.module('myApp.pdfProcess', ['ngRoute'])
       method: 'POST',
       url: 'http://localhost:3002/upload',
       headers: {
-        'Content-Type': undefined
+        'Content-Type': undefined,
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
       },
       data: formdata
      }
@@ -151,7 +166,8 @@ angular.module('myApp.pdfProcess', ['ngRoute'])
       method: 'POST',
       url: 'http://localhost:3002/upload-audio',
       headers: {
-        'Content-Type': undefined
+        'Content-Type': undefined,
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
       },
       data: formdata
      }
@@ -192,7 +208,8 @@ angular.module('myApp.pdfProcess', ['ngRoute'])
       method: 'POST',
       url: 'http://localhost:3002/publish-pdf/' + $scope.pdfData._id,
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
       },
       data: {
         published: !!!$scope.pdfData.published
@@ -211,6 +228,10 @@ angular.module('myApp.pdfProcess', ['ngRoute'])
     var req = {
       method: 'DELETE',
       url: 'http://localhost:3002/delete-audio/' + item._id,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      },
     }
 
     $http(req).then(function (res) {
@@ -265,7 +286,7 @@ angular.module('myApp.pdfProcess', ['ngRoute'])
   $scope.renderFlipPage = (pdfObject) => {
     // if ($scope.flipBook) {
     //   $scope.flipBook.destroy();
-    $scope.totalPageNum = pdfObject.totalPageNum;
+    $scope.totalPageNum = pdfObject.totalPageNum - 1;
 
       const flipPageRoot = document.createElement('div');
       flipPageRoot.id = "flip-book";
@@ -290,7 +311,7 @@ angular.module('myApp.pdfProcess', ['ngRoute'])
       console.log(imageUrls);
       $scope.flipBook.loadFromImages(imageUrls);
       $scope.flipBook.on('flip', (e) => {
-          $scope.currentPageNum = e.data + 1;
+          $scope.currentPageNum = e.data;
           $scope.$apply();
           console.log($scope.currentPageNum);
 
@@ -305,5 +326,10 @@ angular.module('myApp.pdfProcess', ['ngRoute'])
           }
           // audioObj.play();
       });
+  }
+  
+  $scope.logout = function () {
+    localStorage.removeItem('token');
+    window.location.href="#!/login";
   }
 }]);
