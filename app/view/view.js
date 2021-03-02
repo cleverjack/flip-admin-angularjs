@@ -9,8 +9,9 @@ angular.module('myApp.view', ['ngRoute'])
   });
 }])
 
-.controller('ViewCtrl', ['$scope', '$http', function($scope, $http) {
-
+.controller('ViewCtrl', ['$scope', '$http', 'config', function($scope, $http, config) {
+  $scope.baseUrl = config.backendBaseUrl;
+  
   $scope.file = null;
   $scope.audioFile = null;
   $scope.videoFile = null;
@@ -31,7 +32,7 @@ angular.module('myApp.view', ['ngRoute'])
 
     let req = {
       method: 'GET',
-      url: 'http://localhost:3002',
+      url: config.backendBaseUrl,
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -46,7 +47,7 @@ angular.module('myApp.view', ['ngRoute'])
 
     let req2 = {
       method: 'GET',
-      url: 'http://localhost:3002/get-audio',
+      url: config.backendBaseUrl + 'get-audio',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -61,7 +62,7 @@ angular.module('myApp.view', ['ngRoute'])
     
     let req3 = {
       method: 'GET',
-      url: 'http://localhost:3002/videos',
+      url: config.backendBaseUrl + 'videos',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -103,7 +104,7 @@ angular.module('myApp.view', ['ngRoute'])
 
     var req = {
       method: 'POST',
-      url: 'http://localhost:3002/upload',
+      url: config.backendBaseUrl + 'upload',
       headers: {
         'Content-Type': undefined,
         'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -131,7 +132,7 @@ angular.module('myApp.view', ['ngRoute'])
 
     var req = {
       method: 'POST',
-      url: 'http://localhost:3002/upload-audio',
+      url: config.backendBaseUrl + 'upload-audio',
       headers: {
         'Content-Type': undefined,
         'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -159,7 +160,7 @@ angular.module('myApp.view', ['ngRoute'])
 
     var req = {
       method: 'POST',
-      url: 'http://localhost:3002/upload-video',
+      url: config.backendBaseUrl + 'upload-video',
       headers: {
         'Content-Type': undefined,
         'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -177,7 +178,7 @@ angular.module('myApp.view', ['ngRoute'])
   $scope.deletePdf = function (file) {
     var req = {
       method: 'DELETE',
-      url: 'http://localhost:3002/delete-pdf/' + file._id,
+      url: config.backendBaseUrl + 'delete-pdf/' + file._id,
       headers: {
         'Authorization': 'Bearer ' + localStorage.getItem('token')
       },
@@ -194,7 +195,7 @@ angular.module('myApp.view', ['ngRoute'])
   $scope.deleteVideo = function (video) {
     var req = {
       method: 'DELETE',
-      url: 'http://localhost:3002/delete-video/' + video._id,
+      url: config.backendBaseUrl + 'delete-video/' + video._id,
       headers: {
         'Authorization': 'Bearer ' + localStorage.getItem('token')
       },

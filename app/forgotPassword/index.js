@@ -9,7 +9,7 @@ angular.module('myApp.forgotPassword', ['ngRoute'])
   });
 }])
 
-.controller('ForgotPasswordCtrl', ['$scope', '$http', function($scope, $http) {
+.controller('ForgotPasswordCtrl', ['$scope', '$http', 'config', function($scope, $http, config) {
   $scope.email = 'lazstar1127@gmail.com';
 
   $scope.init = function () {
@@ -21,7 +21,7 @@ angular.module('myApp.forgotPassword', ['ngRoute'])
   $scope.forgotPassword = function () {
     let req = {
       method: 'POST',
-      url: 'http://localhost:3002/auth/forgot-password',
+      url: config.backendBaseUrl + 'auth/forgot-password',
       data: {
         role: 2
       }

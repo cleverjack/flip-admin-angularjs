@@ -41,7 +41,7 @@
         <div ng-if="bgAudio.url">
           <p>{{bgAudio.name}}</p>
           <audio controls>
-            <source src="{{'http://localhost:3002/audio/' + bgAudio.url}}">
+            <source ng-src="{{baseUrl + 'audio/' + bgAudio.url}}">
             Your browser does not support the audio tag.
           </audio>
         </div>
@@ -69,7 +69,7 @@
                 <td>{{file.name}}</td>
                 <td>
                   <audio controls>
-                    <source src="{{'http://localhost:3002/audio/' + file.url}}">
+                    <source ng-src="{{baseUrl + 'audio/' + file.url}}">
                     Your browser does not support the audio tag.
                   </audio>
                 </td>

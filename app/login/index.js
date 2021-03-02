@@ -9,7 +9,7 @@ angular.module('myApp.login', ['ngRoute'])
   });
 }])
 
-.controller('LoginCtrl', ['$scope', '$http', function($scope, $http) {
+.controller('LoginCtrl', ['$scope', '$http', 'config', function($scope, $http, config) {
 
   $scope.email = null;
   $scope.password = null;
@@ -43,7 +43,7 @@ angular.module('myApp.login', ['ngRoute'])
 
     let req = {
       method: 'POST',
-      url: 'http://localhost:3002/auth/login',
+      url: config.backendBaseUrl + 'auth/login',
       data: {
         email: $scope.email,
         password: $scope.password,

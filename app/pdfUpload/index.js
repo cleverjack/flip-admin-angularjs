@@ -13,9 +13,11 @@ angular.module('myApp.pdfProcess', ['ngRoute'])
   });
 }])
 
-.controller('PdfUploadCtrl', ['$scope', '$http', '$routeParams', function($scope, $http, $routeParams) {
+.controller('PdfUploadCtrl', ['$scope', '$http', '$routeParams', 'config', function($scope, $http, $routeParams, config) {
   pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
+  $scope.baseUrl = config.backendBaseUrl;
+  
   $scope.file = null;
   $scope.audioFile = null;
   $scope.videoFile = null;
@@ -48,7 +50,7 @@ angular.module('myApp.pdfProcess', ['ngRoute'])
     if ($scope.pdfId) {
       let req = {
         method: 'GET',
-        url: 'http://localhost:3002/pdf/' + $scope.pdfId,
+        url: config.backendBaseUrl + 'pdf/' + $scope.pdfId,
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -64,7 +66,7 @@ angular.module('myApp.pdfProcess', ['ngRoute'])
   
       let req2 = {
         method: 'GET',
-        url: 'http://localhost:3002/pdf-audios/' + $scope.pdfId,
+        url: config.backendBaseUrl + 'pdf-audios/' + $scope.pdfId,
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -76,7 +78,7 @@ angular.module('myApp.pdfProcess', ['ngRoute'])
         $scope.pageAudios = res.data.pageAudios;
 
         if ($scope.bgAudio) {
-          $scope.bgAudioObj.src = "http://localhost:3002/audio/" + $scope.bgAudio.url;
+          $scope.bgAudioObj.src = config.backendBaseUrl + 'audio/' + $scope.bgAudio.url;
           if (!$scope.isBgMute) {
             $scope.bgAudioObj.play();
           }
@@ -110,7 +112,7 @@ angular.module('myApp.pdfProcess', ['ngRoute'])
 
     var req = {
       method: 'POST',
-      url: 'http://localhost:3002/upload',
+      url: config.backendBaseUrl + 'upload',
       headers: {
         'Content-Type': undefined,
         'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -164,7 +166,7 @@ angular.module('myApp.pdfProcess', ['ngRoute'])
 
     var req = {
       method: 'POST',
-      url: 'http://localhost:3002/upload-audio',
+      url: config.backendBaseUrl + 'upload-audio',
       headers: {
         'Content-Type': undefined,
         'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -176,7 +178,7 @@ angular.module('myApp.pdfProcess', ['ngRoute'])
        if (type == 0) {
         $scope.bgAudio = res.data;
         if ($scope.bgAudio) {
-          $scope.bgAudioObj.src = "http://localhost:3002/audio/" + $scope.bgAudio.url;
+          $scope.bgAudioObj.src = config.backendBaseUrl + 'audio/' + $scope.bgAudio.url;
           if (!$scope.isBgMute) {
             $scope.bgAudioObj.play();
           }
@@ -206,7 +208,7 @@ angular.module('myApp.pdfProcess', ['ngRoute'])
 
     var req = {
       method: 'POST',
-      url: 'http://localhost:3002/publish-pdf/' + $scope.pdfData._id,
+      url: config.backendBaseUrl + 'publish-pdf/' + $scope.pdfData._id,
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -227,7 +229,7 @@ angular.module('myApp.pdfProcess', ['ngRoute'])
   $scope.deleteAudio = (item) => {
     var req = {
       method: 'DELETE',
-      url: 'http://localhost:3002/delete-audio/' + item._id,
+      url: config.backendBaseUrl + 'delete-audio/' + item._id,
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -304,7 +306,7 @@ angular.module('myApp.pdfProcess', ['ngRoute'])
 
       let imageUrls = [];
       for (let i=0; i<$scope.totalPageNum; i++) {
-        let url = 'http://localhost:3002/pages/' + pdfObject.baseName + '-' + i + '.png';
+        let url = config.backendBaseUrl + 'pages/' + pdfObject.baseName + '-' + i + '.png';
         imageUrls.push(url);
       }
 
@@ -320,7 +322,7 @@ angular.module('myApp.pdfProcess', ['ngRoute'])
           $scope.pageAudioObj.pause();
 
           if (pageAudio) {
-            $scope.pageAudioObj.src="http://localhost:3002/audio/" + pageAudio.url;
+            $scope.pageAudioObj.src = config.backendBaseUrl + 'audio/' + pageAudio.url;
             if (!$scope.isPageMute)
               $scope.pageAudioObj.play();
           }

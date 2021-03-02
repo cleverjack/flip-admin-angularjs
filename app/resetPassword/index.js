@@ -9,10 +9,11 @@ angular.module('myApp.resetPassword', ['ngRoute'])
   });
 }])
 
-.controller('ResetPasswordCtrl', ['$scope', '$http', function($scope, $http) {
+.controller('ResetPasswordCtrl', ['$scope', '$http', 'config', function($scope, $http, config) {
   $scope.confirm_password = null;
   $scope.password = null;
   $scope.token = null;
+  $scope.baseUrl = config.backendBaseUrl;
 
   
   $scope.getParameterByName = function (name, url = window.location.href) {
@@ -49,7 +50,7 @@ angular.module('myApp.resetPassword', ['ngRoute'])
 
     let req = {
       method: 'POST',
-      url: 'http://localhost:3002/auth/reset-password',
+      url: config.backendBaseUrl + 'auth/reset-password',
       data: {
         password: $scope.password,
         token: $scope.token,

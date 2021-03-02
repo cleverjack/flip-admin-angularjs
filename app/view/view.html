@@ -47,7 +47,7 @@
         <div ng-repeat="video in videos" style="margin-right: 20px;">
           <p style="margin-bottom: 0px;">{{video.name}}</p>
           <video width="320" height="240" controls>
-            <source src="{{'http://localhost:3002/videos/' + video.url}}">
+            <source src="{{baseUrl + 'videos/' + video.url}}">
             Your browser does not support the video tag.
           </video>
           <div>

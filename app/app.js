@@ -14,4 +14,7 @@ config(['$locationProvider', '$routeProvider', function($locationProvider, $rout
   $locationProvider.hashPrefix('!');
 
   $routeProvider.otherwise({redirectTo: '/login'});
-}]);
+}]).constant('config', {  
+  backendBaseUrl: 'http://localhost:3002/',  
+  appVersion: 2.0  
+});
